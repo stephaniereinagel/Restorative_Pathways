@@ -19,6 +19,7 @@ dist-ssr
 
 # Local build/output artifacts
 dev-dist
+.wrangler
 
 # Editor directories and files
 .vscode/*
