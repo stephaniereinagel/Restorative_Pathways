@@ -160,8 +160,9 @@ Output style:
     setBusy(true)
     setErr(null)
     try {
+      const willUseProxy = proxyOk !== false
       const out =
-        proxyOk !== false
+        willUseProxy
           ? await askViaLocalProxy({ model, system, user: [`Context:`, props.contextLines.filter(Boolean).join('\n'), '', `Question:`, q.trim()].filter(Boolean).join('\n') })
           : apiKey
             ? await askOpenAI({ apiKey, model, system, user: [`Context:`, props.contextLines.filter(Boolean).join('\n'), '', `Question:`, q.trim()].filter(Boolean).join('\n') })
@@ -185,7 +186,13 @@ Output style:
       try {
         const res = await fetch('/api/ai/ping', { signal: ctrl.signal })
         if (!alive) return
-        setProxyOk(res.ok)
+        const ping = await res
+          .clone()
+          .json()
+          .catch(() => null as null | { keyConfigured?: boolean; ok?: boolean })
+        const keyConfigured = ping?.keyConfigured
+        // proxyOk means “usable proxy” (reachable + key configured), not merely reachable.
+        setProxyOk(Boolean(res.ok && (keyConfigured ?? true)))
       } catch {
         if (!alive) return
         setProxyOk(false)
