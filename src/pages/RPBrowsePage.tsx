@@ -305,14 +305,14 @@ export function RPBrowsePage() {
           </div>
         </Card>
 
-        <div className="grid grid-cols-2 gap-1 min-[360px]:grid-cols-3 min-[390px]:grid-cols-4 sm:grid-cols-5">
+        <div className="grid grid-cols-2 gap-1">
           {filtered.length ? (
             filtered.map((c) => (
               <div
                 key={c.id}
                 role="button"
                 tabIndex={0}
-                className={`relative aspect-square rounded-2xl border border-[#e5dccf] bg-[#fffdf9] p-1.5 shadow-sm ${
+                className={`relative h-24 rounded-2xl border border-[#e5dccf] bg-[#fffdf9] p-2 shadow-sm ${
                   c.node.children?.length ? 'cursor-pointer hover:bg-[#fbf7ef]' : canAddNode(c.node) ? 'cursor-pointer' : ''
                 }`}
                 onClick={() => {
@@ -346,7 +346,7 @@ export function RPBrowsePage() {
                 </button>
 
                 <div className="min-w-0 pr-7">
-                  <div className="line-clamp-3 text-[12px] font-extrabold leading-tight">{c.node.label}</div>
+                  <div className="line-clamp-2 text-[12px] font-extrabold leading-tight">{c.node.label}</div>
                   <div className="mt-1 text-[10px] text-[#7c756d]">
                     {(() => {
                       const effective = collapseWrapperNodeId(catalog, c.id)
@@ -373,7 +373,7 @@ export function RPBrowsePage() {
               </div>
             ))
           ) : (
-            <div className="col-span-2 sm:col-span-3">
+            <div className="col-span-2">
               <Card>
                 <div className="text-sm text-slate-300">No matches at this level.</div>
               </Card>
