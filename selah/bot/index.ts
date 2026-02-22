@@ -4,9 +4,9 @@
  *
  * Bot App Behavior:
  * 1. Receive DM
- * 2. Immediately acknowledge with Prayer emoji
+ * 2. React to message with 🙏 (pray) to acknowledge
  * 3. Run Claude non-interactive session, write to {epoch}-{uuid}.md
- * 4. Send "Session completed" and attach the md file
+ * 4. React with ✅ (white_check_mark) and attach the md file
  *
  * Env: SLACK_BOT_TOKEN, SLACK_APP_TOKEN, ANTHROPIC_API_KEY
  */
@@ -22,21 +22,23 @@ const app = new App({
 });
 
 app.event("message", async ({ message, say, client }) => {
-  const msg = message as { text?: string; subtype?: string; bot_id?: string; channel?: string };
+  const msg = message as { text?: string; subtype?: string; bot_id?: string; channel?: string; ts?: string };
   if (msg.subtype || msg.bot_id) return;
   const text = (msg.text || "").trim();
   if (!text) return;
 
   const channel = msg.channel!;
+  const ts = msg.ts!;
 
-  // 1. Immediately acknowledge with Prayer emoji
-  await say({ channel, text: "🙏" });
+  // 1. Acknowledge by reacting with praying hands
+  await client.reactions.add({ channel, timestamp: ts, name: "pray" });
 
   try {
     // 2. Run Claude session, write to {epoch}-{uuid}.md
     const filepath = await runSession(text);
 
-    // 3. Send "Session completed" and attach the md file
+    // 3. React with green checkmark and attach the md file
+    await client.reactions.add({ channel, timestamp: ts, name: "white_check_mark" });
     await uploadFileToSlack(client, channel, filepath, "Session completed");
   } catch (e) {
     const err = e instanceof Error ? e.message : String(e);
