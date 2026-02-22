@@ -21,6 +21,11 @@ dist-ssr
 dev-dist
 .wrangler
 
+# Cursor (only track rules)
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

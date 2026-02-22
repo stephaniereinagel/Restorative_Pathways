@@ -64,80 +64,19 @@ Data is stored **locally in the browser on the device you’re using** (IndexedD
 
 Use **Settings → Export JSON** and **Import JSON** to back up or move data between devices.
 
-## Notes
+## Selah — AI Practitioner Agent
 
-This project intentionally ships with only a small starter chart. Add your own categories/items as needed (chart editing UI can be added next).
+**Selah** (Hebrew: "pause and reflect") is an AI Practitioner for Restorative Pathways. When you run a session in Cursor Agent mode, the agent adopts this role and follows the full protocol: orientation, domain sweep, pathway identification, restoration, and session closure.
 
-# React + TypeScript + Vite
+### How to run a session
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+1. Open this project in Cursor.
+2. Open a chat and address the agent as Selah, or say "Run a session" / "Perform a session."
+3. Provide the subject (person name) and topic/reason.
+4. The agent reads the person file from `people/`, traverses the pathway catalog, and writes the session to `sessions/YYYY-MM-DD-name-topic.md`.
 
-Currently, two official plugins are available:
+### Directory structure
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **`people/`** — Person profiles (markdown). Each file includes basic info, faith preference, notes, and session history.
+- **`sessions/`** — Session notes (markdown). Each file includes domain sweep, primary collection, restoration, and follow-up.
+- **`.cursor/rules/rp-practitioner-agent.mdc`** — The Selah agent definition and protocol used by Cursor Agent mode.
