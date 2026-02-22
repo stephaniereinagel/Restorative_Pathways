@@ -42,7 +42,7 @@ jobs:
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no root@134.199.247.160 << 'EOF'
             set -e
             cd /opt/selah/selah/bot
-            bun install --frozen-lockfile
+            /root/.bun/bin/bun install --frozen-lockfile
             systemctl restart selah-bot
             systemctl is-active --quiet selah-bot && echo "✓ selah-bot is running"
           EOF
