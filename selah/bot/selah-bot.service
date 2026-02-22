@@ -1,0 +1,15 @@
+[Unit]
+Description=Selah Slack Bot
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/selah/selah/bot
+EnvironmentFile=/opt/selah/selah/bot/.env
+ExecStart=/root/.bun/bin/bun run index.ts
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

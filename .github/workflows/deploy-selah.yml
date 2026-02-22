@@ -1,0 +1,48 @@
+name: Deploy Selah Bot
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "selah/**"
+      - "public/rp/**"
+      - ".github/workflows/deploy-selah.yml"
+
+jobs:
+  deploy:
+    name: Deploy to server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SELAH_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H 134.199.247.160 >> ~/.ssh/known_hosts
+
+      - name: Sync files
+        run: |
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            --exclude="selah/bot/.env" \
+            --exclude="selah/bot/node_modules" \
+            --exclude="selah/bot/bun.lock" \
+            selah/ root@134.199.247.160:/opt/selah/selah/
+
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            public/rp/ root@134.199.247.160:/opt/selah/public/rp/
+
+      - name: Install dependencies & restart
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no root@134.199.247.160 << 'EOF'
+            set -e
+            cd /opt/selah/selah/bot
+            bun install --frozen-lockfile
+            systemctl restart selah-bot
+            systemctl is-active --quiet selah-bot && echo "✓ selah-bot is running"
+          EOF
