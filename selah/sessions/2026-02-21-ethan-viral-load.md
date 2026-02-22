@@ -101,7 +101,7 @@ Session confirmed Ethan is carrying the same viral load as Gabi and Max. Same co
 - Vomiting or diarrhea (if the bug progresses as it did with Gabi)
 - Whether he settles more easily after this session (absorbed-stress roots addressed)
 
-**Cross-reference:** Gabi's session (`sessions/2026-02-21-gabi-headache-vomiting.md`) and Max's session (`sessions/2026-02-21-max-headache.md`) — all three share Root 1 (viral > acute > systemic) and Root 4 (shared household pathogen exposure).
+**Cross-reference:** Gabi's session (`selah/sessions/2026-02-21-gabi-headache-vomiting.md`) and Max's session (`selah/sessions/2026-02-21-max-headache.md`) — all three share Root 1 (viral > acute > systemic) and Root 4 (shared household pathogen exposure).
 
 **Medical-safety note:** At 19 months, dehydration moves faster. Watch for: fewer wet diapers, no tears when crying, dry mouth, unusual sleepiness or irritability, fever above 102°F, or any instinct that something is off. Seek medical attention promptly if any of these emerge.
 

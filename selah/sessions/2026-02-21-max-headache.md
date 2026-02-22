@@ -94,7 +94,7 @@ Session was **primarily physical/biological** (acute viral load + dehydration) w
 - Whether Max seems more settled/less tense after the environmental-absorption root was addressed
 - If headache returns: note what preceded it (hunger, screens, noise, conflict, dehydration)
 
-**Cross-reference:** Gabi's session also completed today (`sessions/2026-02-21-gabi-headache-vomiting.md`). Root 4 here (shared household pathogen exposure) covers both children. Watch for whether both improve on similar timelines.
+**Cross-reference:** Gabi's session also completed today (`selah/sessions/2026-02-21-gabi-headache-vomiting.md`). Root 4 here (shared household pathogen exposure) covers both children. Watch for whether both improve on similar timelines.
 
 **Medical-safety note:** If headache becomes severe, persistent, or accompanied by high fever, stiff neck, confusion, vision changes, vomiting, or any "this is not normal" intuition — consider medical evaluation.
 

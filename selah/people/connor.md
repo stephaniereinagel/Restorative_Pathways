@@ -12,7 +12,7 @@
 ## Session History
 
 ### 2026-02-19 — Gymnastics class refusal
-- **File:** `sessions/2026-02-19-connor-gymnastics-refusal.md`
+- **File:** `selah/sessions/2026-02-19-connor-gymnastics-refusal.md`
 - **Domains:** Nervous System, Emotional/Relational, Environmental/External Load, Somatic Patterning
 - **Key roots:** Fear of harm (physical), acute flight/avoidance response, anticipatory threat (perception mismatch), freeze-in-place body pattern
 - **Keystone:** Environmental > Mismatch > Perceived Threat Patterns > Anticipatory Threat

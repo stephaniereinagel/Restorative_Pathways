@@ -12,7 +12,7 @@
 ## Session History
 
 ### 2026-02-21 — Possible shared viral load (household illness)
-- **File:** `sessions/2026-02-21-ethan-viral-load.md`
+- **File:** `selah/sessions/2026-02-21-ethan-viral-load.md`
 - **Domains:** Physical/Biological, Nervous System, Environmental/External Load, Somatic Patterning
 - **Key roots:** Acute systemic viral load, cellular dehydration, absorbed hyperarousal from environment, shared household pathogen exposure, absorbed sympathetic dominance
 - **Summary:** Confirmed carrying same viral load as siblings (Gabi, Max). Stronger absorbed-stress component typical for toddler age.

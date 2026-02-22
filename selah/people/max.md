@@ -11,4 +11,4 @@
 ## Session History
 
 ### 2026-02-21 — Headache
-- **File:** `sessions/2026-02-21-max-headache.md`
+- **File:** `selah/sessions/2026-02-21-max-headache.md`

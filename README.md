@@ -73,10 +73,10 @@ Use **Settings → Export JSON** and **Import JSON** to back up or move data bet
 1. Open this project in Cursor.
 2. Open a chat and address the agent as Selah, or say "Run a session" / "Perform a session."
 3. Provide the subject (person name) and topic/reason.
-4. The agent reads the person file from `people/`, traverses the pathway catalog, and writes the session to `sessions/YYYY-MM-DD-name-topic.md`.
+4. The agent reads the person file from `selah/people/`, traverses the pathway catalog, and writes the session to `selah/sessions/YYYY-MM-DD-name-topic.md`.
 
 ### Directory structure
 
-- **`people/`** — Person profiles (markdown). Each file includes basic info, faith preference, notes, and session history.
-- **`sessions/`** — Session notes (markdown). Each file includes domain sweep, primary collection, restoration, and follow-up.
+- **`selah/people/`** — Person profiles (markdown). Each file includes basic info, faith preference, notes, and session history.
+- **`selah/sessions/`** — Session notes (markdown). Each file includes domain sweep, primary collection, restoration, and follow-up.
 - **`.cursor/rules/rp-practitioner-agent.mdc`** — The Selah agent definition and protocol used by Cursor Agent mode.

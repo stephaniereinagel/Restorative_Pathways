@@ -14,7 +14,7 @@
 ## Session History
 
 ### 2026-02-19 — Left foot/heel pain
-- **File:** `sessions/2026-02-19-stephanie-left-foot-heel.md`
+- **File:** `selah/sessions/2026-02-19-stephanie-left-foot-heel.md`
 - **Domains:** Physical/Biological, Nervous System, Emotional/Relational, Cognitive/Belief-Based, Somatic Patterning
 - **Key roots:** Plantar fascia, subtalar joint, uneven weight bearing, compulsive busyness, suppressed resentment, "I am responsible for others"
 - **Keystone:** Limiting Belief > Control Beliefs > "I am responsible for others"
