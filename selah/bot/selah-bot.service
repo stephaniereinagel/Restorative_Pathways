@@ -10,6 +10,7 @@ EnvironmentFile=/opt/selah/selah/bot/.env
 ExecStart=/root/.bun/bin/bun run index.ts
 Restart=always
 RestartSec=5
+TimeoutStopSec=600
 
 [Install]
 WantedBy=multi-user.target

@@ -21,6 +21,8 @@ const app = new App({
   appToken: process.env.SLACK_APP_TOKEN,
 });
 
+const activeSessions = new Set<Promise<void>>();
+
 app.event("message", async ({ message, say, client }) => {
   const msg = message as { text?: string; subtype?: string; bot_id?: string; channel?: string; ts?: string };
   if (msg.subtype || msg.bot_id) return;
@@ -33,21 +35,36 @@ app.event("message", async ({ message, say, client }) => {
   // 1. Acknowledge by reacting with praying hands
   await client.reactions.add({ channel, timestamp: ts, name: "pray" });
 
-  try {
-    // 2. Run Claude session, write to {epoch}-{uuid}.md
-    const filepath = await runSession(text);
+  const session = (async () => {
+    try {
+      // 2. Run Claude session, write to {epoch}-{uuid}.md
+      const filepath = await runSession(text);
 
-    // 3. React with green checkmark and attach the md file
-    await client.reactions.add({ channel, timestamp: ts, name: "white_check_mark" });
-    await uploadFileToSlack(client, channel, filepath, "Session completed");
-  } catch (e) {
-    const err = e instanceof Error ? e.message : String(e);
-    await say({
-      channel,
-      text: `_Session could not complete._\n\`\`\`${err}\`\`\``,
-    });
-  }
+      // 3. React with green checkmark and attach the md file
+      await client.reactions.add({ channel, timestamp: ts, name: "white_check_mark" });
+      await uploadFileToSlack(client, channel, filepath, "Session completed");
+    } catch (e) {
+      const err = e instanceof Error ? e.message : String(e);
+      await say({
+        channel,
+        text: `_Session could not complete._\n\`\`\`${err}\`\`\``,
+      });
+    }
+  })();
+
+  activeSessions.add(session);
+  void session.finally(() => activeSessions.delete(session));
 });
+
+async function shutdown() {
+  console.log("[selah] SIGTERM received — waiting for active sessions to finish...");
+  await app.stop();
+  await Promise.allSettled(activeSessions);
+  console.log("[selah] All sessions complete. Exiting.");
+  process.exit(0);
+}
+
+process.on("SIGTERM", () => { void shutdown(); });
 
 void app.start().then(() => {
   console.log("[selah] Bot running (Socket Mode, DM receive only)");
