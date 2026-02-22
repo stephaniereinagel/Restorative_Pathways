@@ -28,8 +28,8 @@ jobs:
         run: |
           rsync -az --delete \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-            --exclude="selah/bot/.env" \
-            --exclude="selah/bot/node_modules" \
+            --exclude="bot/.env" \
+            --exclude="bot/node_modules" \
             selah/ root@134.199.247.160:/opt/selah/selah/
 
           rsync -az --delete \
