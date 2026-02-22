@@ -1,0 +1,36 @@
+{
+  "_metadata": {
+    "major_version": 2,
+    "minor_version": 1
+  },
+  "display_information": {
+    "name": "Selah",
+    "description": "Restorative Pathways AI practitioner — pause and reflect.",
+    "long_description": "Selah (Hebrew: pause and reflect) is an AI practitioner for Restorative Pathways. It supports restoration-oriented sessions via direct message: domain sweep, pathway identification, and discernment-led restoration. The bot receives DMs only and responds in the posture of a practitioner who holds the subject and topic in awareness, follows the framework catalog, and respects consent and readiness. Not for diagnosis, fixing, or optimization — for creating conditions in which restoration can occur safely."
+  },
+  "settings": {
+    "socket_mode_enabled": true,
+    "event_subscriptions": {
+      "bot_events": ["message.im"]
+    },
+    "interactivity": {
+      "is_enabled": false
+    }
+  },
+  "features": {
+    "bot_user": {
+      "display_name": "Selah",
+      "always_online": false
+    },
+    "app_home": {
+      "home_tab_enabled": false,
+      "messages_tab_enabled": false,
+      "messages_tab_read_only_enabled": false
+    }
+  },
+  "oauth_config": {
+    "scopes": {
+      "bot": ["chat:write", "files:write", "im:history", "im:read"]
+    }
+  }
+}

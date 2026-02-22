@@ -1,0 +1,13 @@
+{
+  "name": "selah-slack-bot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run index.ts",
+    "start": "bun run index.ts"
+  },
+  "dependencies": {
+    "@slack/bolt": "^4.3.0"
+  }
+}
