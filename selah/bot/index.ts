@@ -8,7 +8,7 @@
  * 3. Run Claude non-interactive session, write to {epoch}-{uuid}.md
  * 4. React with ✅ (white_check_mark) and attach the md file
  *
- * Env: SLACK_BOT_TOKEN, SLACK_APP_TOKEN, ANTHROPIC_API_KEY
+ * Env: SLACK_BOT_TOKEN, SLACK_APP_TOKEN (Claude uses stored OAuth login)
  */
 
 import { App } from "@slack/bolt";

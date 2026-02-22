@@ -6,6 +6,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/opt/selah/selah/bot
+Environment="HOME=/root"
 EnvironmentFile=/opt/selah/selah/bot/.env
 ExecStart=/root/.bun/bin/bun run index.ts
 Restart=always

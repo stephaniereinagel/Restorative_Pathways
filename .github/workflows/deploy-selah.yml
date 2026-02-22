@@ -41,6 +41,8 @@ jobs:
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no root@134.199.247.160 "echo '${{ github.sha }}' > /opt/selah/.git-revision"
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no root@134.199.247.160 << 'EOF'
             set -e
+            cp /opt/selah/selah/bot/selah-bot.service /etc/systemd/system/selah-bot.service
+            systemctl daemon-reload
             cd /opt/selah/selah/bot
             /root/.bun/bin/bun install --frozen-lockfile
             systemctl restart selah-bot

@@ -13,8 +13,10 @@ const PROMPT_FILE = join(import.meta.dir, "selah-system-prompt.txt");
 
 function runClaude(args: string[], cwd: string): Promise<{ stdout: string; stderr: string; code: number | null }> {
   return new Promise((resolve, reject) => {
+    const env = { ...process.env, HOME: process.env.HOME || "/root" };
     const proc = spawn("claude", args, {
       cwd,
+      env,
       stdio: ["ignore", "pipe", "pipe"],
     });
     let stdout = "";
