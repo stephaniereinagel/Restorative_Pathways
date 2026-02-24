@@ -4,9 +4,9 @@
  *
  * Bot App Behavior:
  * 1. Receive DM
- * 2. React to message with 🙏 (pray) to acknowledge
- * 3. Run Claude non-interactive session, write to {epoch}-{uuid}.md
- * 4. React with ✅ (white_check_mark) and attach the md file
+ * 2. React with 🙏 to acknowledge
+ * 3. Run Claude session → conversational narrative + session file
+ * 4. Send narrative as a Slack message, react with ✅, attach the session file
  *
  * Env: SLACK_BOT_TOKEN, SLACK_APP_TOKEN (Claude uses stored OAuth login)
  */
@@ -37,12 +37,14 @@ app.event("message", async ({ message, say, client }) => {
 
   const session = (async () => {
     try {
-      // 2. Run Claude session, write to {epoch}-{uuid}.md
-      const filepath = await runSession(text);
+      const { filepath, narrative } = await runSession(text);
 
-      // 3. React with green checkmark and attach the md file
+      if (narrative.trim()) {
+        await say({ channel, text: narrative.trim() });
+      }
+
       await client.reactions.add({ channel, timestamp: ts, name: "white_check_mark" });
-      await uploadFileToSlack(client, channel, filepath, "Session completed");
+      await uploadFileToSlack(client, channel, filepath, "Full session notes attached.");
     } catch (e) {
       const err = e instanceof Error ? e.message : String(e);
       await say({
@@ -68,5 +70,5 @@ process.on("SIGTERM", () => { void shutdown(); });
 
 void app.start().then(() => {
   console.log("[selah] Bot running (Socket Mode, DM receive only)");
-  console.log("[selah] Claude sessions → selah/sessions/{epoch}-{uuid}.md");
+  console.log("[selah] Claude sessions → selah/sessions/YYYY-MM-DD-topic.md");
 });
