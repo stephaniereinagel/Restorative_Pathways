@@ -15,6 +15,43 @@ import { App } from "@slack/bolt";
 import { runSession } from "./session-runner.js";
 import { uploadFileToSlack } from "./slack-upload.js";
 
+const SLACK_MESSAGE_MAX_CHARS = 35000;
+
+function chunkSlackMessage(text: string, maxChars = SLACK_MESSAGE_MAX_CHARS): string[] {
+  const t = text.trim();
+  if (!t) return [];
+  if (t.length <= maxChars) return [t];
+
+  const paras = t.split(/\n{2,}/);
+  const chunks: string[] = [];
+  let current = "";
+
+  for (const p of paras) {
+    const para = p.trim();
+    if (!para) continue;
+    const candidate = current ? `${current}\n\n${para}` : para;
+    if (candidate.length <= maxChars) {
+      current = candidate;
+      continue;
+    }
+
+    if (current) chunks.push(current);
+
+    // If a single paragraph is too large, hard-split it.
+    if (para.length > maxChars) {
+      for (let i = 0; i < para.length; i += maxChars) {
+        chunks.push(para.slice(i, i + maxChars));
+      }
+      current = "";
+    } else {
+      current = para;
+    }
+  }
+
+  if (current) chunks.push(current);
+  return chunks;
+}
+
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   socketMode: true,
@@ -39,8 +76,9 @@ app.event("message", async ({ message, say, client }) => {
     try {
       const { filepath, narrative } = await runSession(text);
 
-      if (narrative.trim()) {
-        await say({ channel, text: narrative.trim() });
+      const narrativeChunks = chunkSlackMessage(narrative);
+      for (const chunk of narrativeChunks) {
+        await say({ channel, text: chunk });
       }
 
       await client.reactions.add({ channel, timestamp: ts, name: "white_check_mark" });

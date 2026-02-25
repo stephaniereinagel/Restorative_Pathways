@@ -57,7 +57,7 @@ For each root:
 ## Output
 Your conversational narrative (explaining what you found, why, and what it means) will be sent directly to the person on Slack. Be warm, clear, and thorough — this is their session experience, not just notes.
 
-After the narrative, write the structured session notes to the file path given in the user message using the Edit tool. Include these sections:
+After the narrative, write the structured session notes to the file path given in the user message using the Write or Edit tool. Include these sections:
 - Header: Subject, Topic, Date, Practitioner, Mode
 - DOMAIN SWEEP (table)
 - PRIMARY COLLECTION (roots with full paths and notes)
