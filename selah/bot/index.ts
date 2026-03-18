@@ -12,10 +12,12 @@
  */
 
 import { App } from "@slack/bolt";
+import type { WebClient } from "@slack/web-api";
 import { runSession } from "./session-runner.js";
 import { uploadFileToSlack } from "./slack-upload.js";
 
-const SLACK_MESSAGE_MAX_CHARS = 35000;
+// Keep chunks conservative for Slack reliability/readability.
+const SLACK_MESSAGE_MAX_CHARS = 3000;
 
 function chunkSlackMessage(text: string, maxChars = SLACK_MESSAGE_MAX_CHARS): string[] {
   const t = text.trim();
@@ -52,6 +54,44 @@ function chunkSlackMessage(text: string, maxChars = SLACK_MESSAGE_MAX_CHARS): st
   return chunks;
 }
 
+function splitInHalf(text: string): [string, string] {
+  if (text.length < 2) return [text, ""];
+  let splitAt = Math.floor(text.length / 2);
+  const nearestBreak = text.lastIndexOf("\n\n", splitAt);
+  if (nearestBreak > 0) splitAt = nearestBreak;
+  return [text.slice(0, splitAt).trim(), text.slice(splitAt).trim()];
+}
+
+async function sendSlackTextSafe(
+  client: WebClient,
+  channel: string,
+  text: string,
+  threadTs?: string
+): Promise<void> {
+  const payload = text.trim();
+  if (!payload) return;
+
+  try {
+    await client.chat.postMessage({
+      channel,
+      text: payload,
+      ...(threadTs ? { thread_ts: threadTs } : {}),
+    });
+    return;
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    const tooLong =
+      /msg_too_long/i.test(msg) ||
+      /invalid_arguments/i.test(msg) ||
+      payload.length > SLACK_MESSAGE_MAX_CHARS;
+    if (!tooLong || payload.length < 100) throw e;
+
+    const [left, right] = splitInHalf(payload);
+    if (left) await sendSlackTextSafe(client, channel, left, threadTs);
+    if (right) await sendSlackTextSafe(client, channel, right, threadTs);
+  }
+}
+
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   socketMode: true,
@@ -77,8 +117,23 @@ app.event("message", async ({ message, say, client }) => {
       const { filepath, narrative } = await runSession(text);
 
       const narrativeChunks = chunkSlackMessage(narrative);
-      for (const chunk of narrativeChunks) {
-        await say({ channel, text: chunk });
+      if (narrativeChunks.length === 0) {
+        await say({
+          channel,
+          text: "_Session completed, but no conversational output was generated. Full notes are attached below._",
+        });
+      } else if (narrativeChunks.length === 1) {
+        await sendSlackTextSafe(client, channel, narrativeChunks[0]);
+      } else {
+        const opener = await client.chat.postMessage({
+          channel,
+          text: `_Session reflection (part 1/${narrativeChunks.length})_\n\n${narrativeChunks[0]}`,
+        });
+        const threadTs = opener.ts;
+        for (let i = 1; i < narrativeChunks.length; i++) {
+          const numbered = `_Part ${i + 1}/${narrativeChunks.length}_\n\n${narrativeChunks[i]}`;
+          await sendSlackTextSafe(client, channel, numbered, threadTs);
+        }
       }
 
       await client.reactions.add({ channel, timestamp: ts, name: "white_check_mark" });
