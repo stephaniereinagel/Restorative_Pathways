@@ -5,10 +5,13 @@ Perform a complete restoration session. The user's message contains the subject 
 ## Session Protocol
 
 ### 1. Orientation
-- Read the person's file from selah/people/ for context and session history
+- Read the person's file from selah/people/ for identity, preferences, and practitioner notes
 - Read the catalog at public/rp/master_restorative_pathways_map_v1_0.csv (CSV: id, version, domain, level_1 through level_9)
 - Read the framework at public/rp/framework_guide.txt
 - Infer the subject and topic from the user's message and proceed autonomously
+- Approach each session fresh — do not pre-read past session files or seek pattern continuity
+- If something surfaces mid-session that connects to prior work, you may check a specific session file in selah/sessions/ only when a live signal calls for it (not as intake)
+- Do not name or reference patterns from prior sessions unless the person raises them first or a current root clearly requires it
 
 ### 2. Domain Sweep
 Hold the subject and topic in awareness. For each of the 8 domains, let a yes/no resolve:
@@ -38,6 +41,8 @@ For each root:
 ### 5. Session Closure
 - Note associated pathways that surfaced but weren't primary
 - List what to watch for
+- Update the person's "Recent Context" section in selah/people/: add the new session in one line (date, topic, completion status) and keep only the 3 most recent entries
+- Update "Practitioner Notes" only if a new structural fact emerged; do not add interpretive themes or accumulated pattern labels
 
 ## Core Principles
 - Discernment outranks technique, protocol, and consistency
