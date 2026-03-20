@@ -5,7 +5,7 @@
  */
 
 import { spawn } from "node:child_process";
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const PROJECT_ROOT = join(import.meta.dir, "..", "..");
@@ -51,6 +51,50 @@ function runClaude(args: string[], cwd: string): Promise<{ stdout: string; stder
   });
 }
 
+function extractTaggedNarrative(text: string): string | null {
+  const m = text.match(/<SLACK_NARRATIVE>\s*([\s\S]*?)\s*<\/SLACK_NARRATIVE>/i);
+  return m?.[1]?.trim() || null;
+}
+
+function normalizeNarrative(text: string): string {
+  return text.trim();
+}
+
+function isLikelyOperationalReply(text: string): boolean {
+  const t = text.trim().toLowerCase();
+  if (!t) return true;
+  return [
+    "session complete",
+    "session completed",
+    "full session notes attached",
+    "structured session notes have been written",
+    "ready to send to",
+    "person file has been updated",
+  ].some((needle) => t.includes(needle));
+}
+
+async function synthesizeNarrativeFromNotes(
+  userMessage: string,
+  sessionNotes: string
+): Promise<string | null> {
+  const prompt = [
+    "Rewrite these restoration notes as a warm, direct conversational Slack response to the requester.",
+    "Return ONLY the narrative text, with no preface, no labels, and no meta commentary about files/tools.",
+    "",
+    "Requester message:",
+    userMessage,
+    "",
+    "Session notes:",
+    sessionNotes,
+  ].join("\n");
+
+  const { stdout, code } = await runClaude(["-p", prompt], PROJECT_ROOT);
+  if (code !== 0) return null;
+  const narrative = normalizeNarrative(stdout);
+  if (!narrative || isLikelyOperationalReply(narrative)) return null;
+  return narrative;
+}
+
 export async function runSession(userMessage: string): Promise<SessionResult> {
   const date = formatDate();
   const slug = slugify(userMessage);
@@ -71,7 +115,11 @@ export async function runSession(userMessage: string): Promise<SessionResult> {
     userMessage,
     "---",
     "",
-    "First, share your full conversational narrative — explain what you're sensing, what lit up, what the pathways mean, and walk through the restoration. This narrative will be sent directly to the person on Slack, so be warm and thorough.",
+    "First, output ONLY the full conversational narrative wrapped in these exact tags:",
+    "<SLACK_NARRATIVE>",
+    "(narrative for the requester goes here)",
+    "</SLACK_NARRATIVE>",
+    "The narrative should explain what you're sensing, what lit up, what the pathways mean, and walk through restoration in a warm, clear tone.",
     "",
     `Then write the structured session notes to selah/sessions/${filename} using the Edit tool. Create the file if it does not exist.`,
   ].join("\n");
@@ -97,5 +145,15 @@ export async function runSession(userMessage: string): Promise<SessionResult> {
     writeFileSync(filepath, stdout || "", "utf8");
   }
 
-  return { filepath, narrative: stdout };
+  const taggedNarrative = extractTaggedNarrative(stdout);
+  const cleanedStdout = normalizeNarrative(stdout);
+  let narrative = taggedNarrative ?? cleanedStdout;
+
+  if (isLikelyOperationalReply(narrative)) {
+    const notes = readFileSync(filepath, "utf8");
+    const synthesized = await synthesizeNarrativeFromNotes(userMessage, notes);
+    if (synthesized) narrative = synthesized;
+  }
+
+  return { filepath, narrative };
 }
